@@ -1,20 +1,20 @@
 #!/bin/bash
 set -e
 
-# Wait a sec for OpenLDAP to start
+# Ensure OpenLDAP has sufficient time to initialize
 sleep 1
 
-# Create the Privilege Separation directory for SSH
-mkdir /var/run/sshd
+# Establish the Privilege Separation directory for SSH
+mkdir -p /var/run/sshd
 
-# Edit the SSHD configuration to use PAM
+# Refine the SSHD configuration to integrate PAM
 sed -i -e 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/' \
        -e 's/UsePAM no/UsePAM yes/' \
        -e 's/#PasswordAuthentication yes/PasswordAuthentication yes/' \
        -e 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' \
        /etc/ssh/sshd_config
 
-# Add configuration options to sshd_config
+# Introduce supplementary configuration options to sshd_config
 cat <<EOL >> /etc/ssh/sshd_config
 AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
 AuthorizedKeysCommandUser root
@@ -24,16 +24,15 @@ StreamLocalBindUnlink yes
 MaxStartups 50:100:200
 EOL
 
-# Edit the PAM common-session file to create home directories
+# Modify the PAM common-session file to facilitate home directory creation
 echo "session optional pam_mkhomedir.so" >> /etc/pam.d/common-session
 
-
-# Start SSH service
+# Initialize SSH service
 service ssh start
 
-# Start SSSD service
+# Initialize SSSD service
 rm -f /var/run/sssd.pid
 sssd -i &
 
-# Keep the container running
+# Maintain container operation
 tail -f /dev/null

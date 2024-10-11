@@ -1,11 +1,11 @@
-### Dockerfile Repository: `utility-box-docker`
+### Dockerfile Repository: `playground`
 
-This repository contains Dockerfiles to build utility box images based on the latest Ubuntu distribution and NVIDIA's CUDA base image. These images include various tools for monitoring, data transfer, cloud service command-line interfaces (CLIs), and more.
+This repository contains Dockerfiles to build playground images based on the latest Ubuntu distribution and NVIDIA's CUDA base image. These images include various tools for monitoring, data transfer, cloud service command-line interfaces (CLIs), and more.
 
 #### Docker Images:
 
-- **Utility Image**: Based on the latest Ubuntu distribution, this image includes essential tools for system monitoring, data transfer, session management, and cloud service CLIs.
-- **Playground Image**: Based on NVIDIA's CUDA base image, this image is designed for machine learning and GPU-intensive tasks, including additional Python libraries and ML frameworks.
+- **CPU Image**: Based on the latest Ubuntu distribution, this image includes essential tools for system monitoring, data transfer, session management, and cloud service CLIs.
+- **GPU Image**: Based on NVIDIA's CUDA base image, this image is designed for machine learning and GPU-intensive tasks, including additional Python libraries and ML frameworks.
 
 #### Tools Included:
 
@@ -44,29 +44,19 @@ This repository contains Dockerfiles to build utility box images based on the la
 
 #### Usage:
 
-To build the **Utility Image** using the Ubuntu-based Dockerfile, use the following command in the directory containing the Dockerfile:
+To build the **CPU Image** using the Ubuntu-based Dockerfile, use the following command in the directory containing the Dockerfile:
 
 ```bash
-docker build -t utility-box:latest .
+make build-cpu
 ```
 
 To build the **Playground Image** using the CUDA-based Dockerfile, use the following command:
 
 ```bash
-docker build -f Dockerfile-playground -t utility-box-cuda:latest .
+make build-gpu
 ```
 
-To run a container using the **Utility Image** and enter the bash shell:
-
-```bash
-docker run -it utility-box:latest
-```
-
-To run a container using the **Playground Image** and enter the bash shell:
-
-```bash
-docker run --gpus all -it utility-box-cuda:latest
-```
+**Important:** Each time you build the images, the version will be updated to ensure you have the latest tools and dependencies. This is achieved through the Makefile, which dynamically sets the version based on the build process.
 
 #### Note:
 
