@@ -81,6 +81,20 @@ RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then
     && rm -rf /var/lib/apt/lists/*; \
 fi
 
+# Install NVIDIA DCGM (only for GPU image)
+RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then \
+    apt-get update && apt-get install -y --no-install-recommends --allow-change-held-packages \
+    apt-key del 7fa2af80 \
+    && distribution=$(. /etc/os-release;echo $ID$VERSION_ID | sed -e 's/\.//g') \
+    && wget https://developer.download.nvidia.com/compute/cuda/repos/$distribution/sbsa/cuda-keyring_1.1-1_all.deb \
+    && dpkg -i cuda-keyring_1.1-1_all.deb \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends --allow-change-held-packages \
+    datacenter-gpu-manager \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*; \
+fi
+
 # Install Python libraries and ML tools (only for GPU image)
 RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then \
     pip3 install --no-cache-dir --upgrade pip \
