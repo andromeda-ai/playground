@@ -40,6 +40,7 @@ This repository contains Dockerfiles to build playground images based on the lat
   - MLflow, Weights & Biases: `mlflow`, `wandb`
   - Optimization and tuning: `ray[tune]`, `optuna`
   - GPU tools: `nvitop`, `py3nvml`, `pynvml`
+  - NVIDIA DCGM: A suite of tools for monitoring and managing GPU resources in data centers.
   - Benchmarking tools: `pytest-benchmark`, `memory_profiler`, `line_profiler`
 
 #### Usage:

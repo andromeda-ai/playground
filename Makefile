@@ -17,7 +17,7 @@ build-cpu:
 # Target to build GPU image
 build-gpu:
 	@echo "Building GPU Docker image with version $(VERSION)..."
-	docker build -t $(GPU_IMAGE_BASE)-$(VERSION) -t $(GPU_IMAGE_BASE)-latest -f Dockerfile . --build-arg BASE_IMAGE=$(GPU_BASE_IMAGE) --platform=linux/amd64
+	docker build -t $(GPU_IMAGE_BASE)-$(VERSION) -t $(GPU_IMAGE_BASE)-latest -f Dockerfile . --build-arg BASE_IMAGE=$(GPU_BASE_IMAGE) --build-arg GPU_IMAGE="true" --platform=linux/amd64
 
 # Target to deploy both images
 deploy: build-cpu build-gpu
