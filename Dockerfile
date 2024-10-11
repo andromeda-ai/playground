@@ -3,6 +3,7 @@ ARG BASE_IMAGE
 
 # Set the base image based on the argument
 FROM ${BASE_IMAGE}
+ARG GPU_IMAGE=false
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -73,17 +74,18 @@ COPY startup_script.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/startup_script.sh
 
 # Install NVIDIA NCCL (only for GPU image)
-RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then \
+RUN if [ "${GPU_IMAGE}" = "true" ]; then \
     apt-get update && apt-get install -y --no-install-recommends --allow-change-held-packages \
     libnccl2 \
     libnccl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*; \
+else \
+    echo "GPU_IMAGE is not set to true, skipping NVIDIA NCCL installation."; \
 fi
 
 # Install NVIDIA DCGM (only for GPU image)
-RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then \
-    apt-get update && apt-get install -y --no-install-recommends --allow-change-held-packages \
+RUN if [ "${GPU_IMAGE}" = "true" ]; then \
     apt-key del 7fa2af80 \
     && distribution=$(. /etc/os-release;echo $ID$VERSION_ID | sed -e 's/\.//g') \
     && wget https://developer.download.nvidia.com/compute/cuda/repos/$distribution/sbsa/cuda-keyring_1.1-1_all.deb \
@@ -93,10 +95,12 @@ RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then
     datacenter-gpu-manager \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*; \
+else \
+    echo "GPU_IMAGE is not set to true, skipping NVIDIA DCGM installation."; \
 fi
 
 # Install Python libraries and ML tools (only for GPU image)
-RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then \
+RUN if [ "${GPU_IMAGE}" = "true" ]; then \
     pip3 install --no-cache-dir --upgrade pip \
     && pip3 install --no-cache-dir \
     numpy \
@@ -117,22 +121,28 @@ RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then
     wandb \
     ray[tune] \
     optuna; \
+else \
+    echo "GPU_IMAGE is not set to true, skipping Python libraries and ML tools installation."; \
 fi
 
 # Install additional GPU tools (only for GPU image)
-RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then \
+RUN if [ "${GPU_IMAGE}" = "true" ]; then \
     pip3 install --no-cache-dir \
     nvitop \
     py3nvml \
     pynvml; \
+else \
+    echo "GPU_IMAGE is not set to true, skipping additional GPU tools installation."; \
 fi
 
 # Install benchmarking tools (only for GPU image)
-RUN if [ "${BASE_IMAGE}" = "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" ]; then \
+RUN if [ "${GPU_IMAGE}" = "true" ]; then \
     pip3 install --no-cache-dir \
     pytest-benchmark \
     memory_profiler \
     line_profiler; \
+else \
+    echo "GPU_IMAGE is not set to true, skipping benchmarking tools installation."; \
 fi
 
 # Set the entrypoint
