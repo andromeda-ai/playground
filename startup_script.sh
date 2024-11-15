@@ -29,7 +29,7 @@ if [ "$ENABLE_MFA" = "true" ]; then
     PubkeyAuthentication yes
     AuthenticationMethods publickey,keyboard-interactive
     KbdInteractiveAuthentication yes
-    EOL
+EOL
 fi
 
 # Introduce supplementary configuration options to sshd_config
