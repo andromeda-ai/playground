@@ -63,6 +63,15 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install YubiKey PAM module
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+    libpam-yubico \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Enable systemd
 RUN systemctl enable ssh
 
