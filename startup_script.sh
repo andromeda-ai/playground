@@ -25,10 +25,10 @@ EOL
 
 if [ "$ENABLE_MFA" = "true" ]; then
     cat <<EOL >> /etc/ssh/sshd_config
-    PasswordAuthentication no
-    PubkeyAuthentication yes
-    AuthenticationMethods publickey,keyboard-interactive
-    KbdInteractiveAuthentication yes
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthenticationMethods publickey,keyboard-interactive
+KbdInteractiveAuthentication yes
 EOL
 fi
 
